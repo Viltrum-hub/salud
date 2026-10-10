@@ -4,7 +4,7 @@
   const ik=(a,b,l1,l2,sign)=>{const dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy),k=(l1*l1-l2*l2+d*d)/(2*d),h=Math.sqrt(Math.max(0,l1*l1-k*k));return[a[0]+dx/d*k-dy/d*h*sign,a[1]+dy/d*k+dx/d*h*sign];};
   const arm=(s,upper,lower)=>{const elbow=point(s,upper,40);return[s,elbow,point(elbow,lower,40)];};
   function pose(id,time,weights=false){
-    const tempo={march:2.4,side:3,jack:3,shoulders:5}[id]||4,cycle=time/tempo,phase=((cycle%1)+1)%1,t=cycle*Math.PI*2,ease=u=>(1-Math.cos(Math.PI*Math.max(0,Math.min(1,u))))/2;
+    const tempo={march:1.2,side:3,jack:3,shoulders:5}[id]||4,cycle=time/tempo,phase=((cycle%1)+1)%1,t=cycle*Math.PI*2,ease=u=>(1-Math.cos(Math.PI*Math.max(0,Math.min(1,u))))/2;
     const q=phase<.55?ease(phase/.55):phase<.61?1:phase<.96?1-ease((phase-.61)/.35):0,up=phase<.61;
     let s1=[159,107],s2=[199,107],h1=[165,188],h2=[195,188],head=[179,67],f1=[153,285.5],f2=[207,285.5],a1=arm(s1,-.12,-.12),a2=arm(s2,.12,.12),signs=[1,-1],profile=false,surface='ground',phrase='Respira con normalidad';
     const stance=()=>{profile=true;h1=[175,188];h2=[166,190];s1=[177,107];s2=[168,109];head=[180,69];f1=[186,285.5];f2=[174,285.5];signs=[-1,-1];a1=arm(s1,0,0);a2=arm(s2,0,0);};
@@ -25,8 +25,20 @@
       surface='wall';const tilt=.225+.18*q;s1=[155+Math.sin(tilt)*179,285.5-Math.cos(tilt)*179];s2=add(s1,-9,3);h1=[155+Math.sin(tilt)*98,285.5-Math.cos(tilt)*98];h2=add(h1,-9,3);head=add(s1,Math.sin(tilt)*38,-Math.cos(tilt)*38);f1=[155,285.5];f2=[146,285.5];const hand1=[266.5,134],hand2=[257.5,137];a1=[s1,ik(s1,hand1,40,40,1),hand1];a2=[s2,ik(s2,hand2,40,40,1),hand2];phrase=up?'Acerca el pecho a la pared':'Empuja con control';
     }
     if(id==='march'){
-      const l=Math.pow(Math.max(0,Math.sin(t)),2),r=Math.pow(Math.max(0,-Math.sin(t)),2),sway=Math.sin(t)*4,bob=-Math.pow(Math.sin(t),2)*2;
-      h1=add(h1,sway,bob);h2=add(h2,sway,bob);s1=add(s1,sway,bob);s2=add(s2,sway,bob);head=add(head,sway,bob);f1=[153-9*l,285.5-40*l];f2=[207+9*r,285.5-40*r];a1=arm(s1,-.15,.1-.95*r);a2=arm(s2,.15,-.1+.95*l);phrase=Math.sin(t)>=0?'Rodilla izquierda · brazo contrario':'Rodilla derecha · brazo contrario';
+      stance();
+      const bounce=-4*Math.pow(Math.sin(t),2),lean=.10;
+      h1=[175,195+bounce];h2=add(h1,-9,2);
+      s1=add(h1,Math.sin(lean)*81,-Math.cos(lean)*81);s2=add(s1,-9,2);
+      head=add(s1,Math.sin(lean)*38,-Math.cos(lean)*38);
+      // Each foot rolls through support, then returns with a lifted knee.
+      const foot=(offset,depth)=>{const u=(phase+offset)%1;
+        if(u<.5)return[175+24*Math.cos(u*Math.PI*2)+depth,285.5];
+        const v=(u-.5)*2;return[175-24*Math.cos(v*Math.PI)+depth,285.5-48*Math.pow(Math.sin(v*Math.PI),2)];
+      };
+      f1=foot(0,0);f2=foot(.5,-9);
+      const swing=.62*Math.sin(t);
+      a1=arm(s1,swing,swing+1.65);a2=arm(s2,-swing,-swing+1.65);
+      phrase='Pasos ligeros · brazos alternados';
     }
     if(id==='side'||id==='jack'){
       const half=((cycle%2)+2)%2,left=half<1,u=half%1,step=(1-Math.cos(u*Math.PI*2))/2,shift=(left?-1:1)*step*20,lift=Math.pow(Math.max(0,Math.sin(u*Math.PI*2)),2)*7;

@@ -3,7 +3,7 @@
   const $ = s => document.querySelector(s), dialog = $('#workoutDialog');
   if (!dialog) return;
   const ex = {
-    march:{name:'Marcha en el sitio',cue:'Alterna las rodillas con pasos suaves. Mantén el torso erguido y acompaña con los brazos.',alt:'Menor intensidad: levanta menos las rodillas.',view:'Vista frontal',tempo:2.4},
+    march:{name:'Trote suave en el sitio',cue:'Alterna pasos cortos y ligeros. Flexiona los codos y mueve cada brazo con la pierna contraria.',alt:'Menor intensidad: marcha sin saltar y levanta menos las rodillas.',view:'Vista lateral',tempo:1.2},
     side:{name:'Pasos laterales',cue:'Da un paso lateral y acerca el otro pie sin cruzarlo. Mantén las rodillas suaves.',alt:'Menor intensidad: acorta los pasos.',view:'Vista frontal',tempo:3},
     shoulders:{name:'Movilidad de hombros',cue:'Eleva los brazos de forma suave hasta un rango cómodo y vuelve despacio. Evita encoger los hombros.',alt:'Reduce la altura si lo necesitas; no fuerces el recorrido.',view:'Vista frontal',tempo:5},
     heel:{name:'Elevación de talones',cue:'Sube ambos talones y baja lentamente. Conserva los pies paralelos y el equilibrio.',alt:'Puedes apoyar una mano en una superficie estable.',view:'Vista lateral',tempo:4},
