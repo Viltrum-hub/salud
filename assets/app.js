@@ -164,6 +164,13 @@
     window.addEventListener('pagehide', stop);
     drawTimer();
   }
+  document.addEventListener('vital-workout-complete', event => {
+    const { label, minutes } = event.detail || {};
+    if (typeof label !== 'string' || !Number.isFinite(minutes) || minutes <= 0) return;
+    day().habits.movimiento = true;
+    const persisted = record('activity', label, { minutes });
+    $('#workoutStatus').textContent = persisted ? 'Sesión guardada en Mi espacio. ¡Bien hecho!' : 'Sesión completada. No se pudo guardar en este navegador.';
+  });
   const sleepMinutes = (bed, wake) => {
     const parts = text => /^([01]\d|2[0-3]):[0-5]\d$/.test(text) ? Number(text.slice(0, 2)) * 60 + Number(text.slice(3)) : NaN;
     const difference = (parts(wake) - parts(bed) + 1440) % 1440;
