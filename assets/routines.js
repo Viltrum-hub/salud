@@ -89,7 +89,7 @@
     // Controlled lowering, a short turnaround, then a steady return.
     const q=phase<.55?ease(phase/.55):phase<.61?1:phase<.96?1-ease((phase-.61)/.35):0;
     const breathe=Math.sin(animationTime*1.8)*.5;
-    let s1=[159,102],s2=[199,102],h1=[165,183],h2=[195,183],hand1=[144,179],hand2=[216,179],foot1=[153,280],foot2=[207,280],head=[179,62],armSigns=[1,-1],legSigns=[1,-1],profile=false,floor=false,scene='',phrase='Respira con normalidad';
+    let s1=[159,102],s2=[199,102],h1=[165,183],h2=[195,183],hand1=[144,179],hand2=[216,179],foot1=[153,280],foot2=[207,280],head=[179,62],armSigns=[1,-1],legSigns=[1,-1],profile=false,floor=false,scene='',phrase='Respira con normalidad',rowElbow1=null,rowElbow2=null;
     const rising=phase<.61;
     if(['squat','heel','row','wall'].includes(id)){
       profile=true;h1=[175,181];h2=[166,183];s1=[177,100];s2=[168,102];head=[180,62];hand1=[180,179];hand2=[171,181];foot1=[186,280];foot2=[174,280];armSigns=[1,1];legSigns=[-1,-1];
@@ -104,7 +104,10 @@
         phrase=rising?'Eleva los talones':'Baja lentamente';
       }
       if(id==='row'){
-        h1=[155,191];h2=add(h1,-9,2);s1=[215,138];s2=add(s1,-9,2);head=[242,112];hand1=[218-37*q,217-44*q];hand2=add(hand1,-9,2);armSigns=[-1,-1];
+        h1=[155,196];h2=add(h1,-9,2);s1=[215,138];s2=add(s1,-9,2);head=[242,112];
+        foot1=[186,285.5];foot2=[174,285.5];
+        rowElbow1=point(s1,-1.12*q,40);rowElbow2=point(s2,-1.12*q,40);
+        hand1=point(rowElbow1,.08*q,40);hand2=point(rowElbow2,.08*q,40);
         phrase=rising?'Lleva los codos atrás':'Baja las mancuernas';
       }
       if(id==='wall'){
@@ -148,13 +151,19 @@
       const j=joint(a,b,l1,l2,sign);
       return `<path d="M${coords(a)}L${coords(j)}L${coords(b)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"/>`;
     };
-    const arm=(a,b,sign,far)=>limb(a,b,40,40,sign,far?depth:silhouette,15);
+    const arm=(a,b,sign,far)=>{
+      if(id==='row'){
+        const elbow=far?rowElbow2:rowElbow1;
+        return `<path class="row-arm ${far?'far':'near'}" d="M${coords(a)}L${coords(elbow)}L${coords(b)}" fill="none" stroke="${far?depth:silhouette}" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>`;
+      }
+      return limb(a,b,40,40,sign,far?depth:silhouette,15);
+    };
     const leg=(a,b,sign,far)=>limb(a,b,51,49,sign,far?depth:silhouette,22);
     const sm=center(s1,s2),hm=center(h1,h2),dx=hm[0]-sm[0],dy=hm[1]-sm[1],len=Math.hypot(dx,dy)||1,normal=[dy/len,-dx/len];
     const edge=(v,w)=>add(v,normal[0]*w,normal[1]*w),width=profile?15:23,waist=profile?13:17,sl=edge(sm,width),sr=edge(sm,-width),hl=edge(hm,waist),hr=edge(hm,-waist),ml=edge(mix(sm,hm,.5),width*.8),mr=edge(mix(sm,hm,.5),-width*.8);
     const torso=`<path d="M${coords(sl)}Q${coords(add(sm,normal[1]*9,-normal[0]*9))} ${coords(sr)}Q${coords(mr)} ${coords(hr)}Q${coords(hm)} ${coords(hl)}Q${coords(ml)} ${coords(sl)}Z" fill="${silhouette}"/>`;
     const shoe=(v,far)=>line(add(v,-5,2),[v[0]+13,id==='heel'?282:v[1]+2],far?depth:silhouette,9);
-    const markers={squat:[300,166,300,214],heel:[249,248,249,218],row:[283,219,257,182],wall:[232,75,253,75],bridge:[193,220,193,185],press:[139,208,139,175],shoulders:[290,168,290,118],march:[112,235,112,204],side:[92,246,64,246],jack:[285,192,285,151]};
+    const markers={squat:[300,166,300,214],heel:[249,248,249,218],row:[271,211,238,190],wall:[232,75,253,75],bridge:[193,220,193,185],press:[139,208,139,175],shoulders:[290,168,290,118],march:[112,235,112,204],side:[92,246,64,246],jack:[285,192,285,151]};
     const m=markers[id];const arrow=m?(rising||['march','side','jack'].includes(id)?m:[m[2],m[3],m[0],m[1]]):null;
     const guide=arrow?`<path d="M${arrow[0]} ${arrow[1]}L${arrow[2]} ${arrow[3]}" fill="none" stroke="#c1ff34" stroke-opacity=".7" stroke-width="1.5" marker-end="url(#motionArrow)"/>`:'';
     $('#figureLimbs').innerHTML=scene+guide+leg(h2,foot2,legSigns[1],true)+arm(s2,hand2,armSigns[1],true)+torso+leg(h1,foot1,legSigns[0],false)+arm(s1,hand1,armSigns[0],false)+`<circle cx="${n(head[0])}" cy="${n(head[1])}" r="19" fill="${silhouette}"/>`+shoe(foot2,true)+shoe(foot1,false);
