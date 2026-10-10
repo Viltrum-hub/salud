@@ -76,33 +76,82 @@
     figure();
   }
   const add=(p,x,y)=>[p[0]+x,p[1]+y];
-  // Two rigid segments joined at a joint, rather than stretching the limbs.
-  function joint(a,b,l1,l2,side=1){const dx=b[0]-a[0],dy=b[1]-a[1],raw=Math.hypot(dx,dy)||1,d=Math.min(l1+l2-.1,Math.max(Math.abs(l1-l2)+.1,raw));const ux=dx/raw,uy=dy/raw,k=(l1*l1-l2*l2+d*d)/(2*d),h=Math.sqrt(Math.max(0,l1*l1-k*k));return[a[0]+ux*k-uy*h*side,a[1]+uy*k+ux*h*side];}
+  const mix=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
+  const center=(a,b)=>mix(a,b,.5);
+  const point=(p,a,l)=>[p[0]+Math.sin(a)*l,p[1]+Math.cos(a)*l];
+  function joint(a,b,l1,l2,side=1){const dx=b[0]-a[0],dy=b[1]-a[1],raw=Math.hypot(dx,dy)||1,d=Math.min(l1+l2-.05,Math.max(Math.abs(l1-l2)+.05,raw)),ux=dx/raw,uy=dy/raw,k=(l1*l1-l2*l2+d*d)/(2*d),h=Math.sqrt(Math.max(0,l1*l1-k*k));return[a[0]+ux*k-uy*h*side,a[1]+uy*k+ux*h*side];}
   function figure(){
-    if(!routine)return;const p=phases[index], id=finished?'rest':p.id, e=ex[id];const t=motion?animationTime/(e?.tempo||4)*Math.PI*2:0;const q=(1-Math.cos(t))/2, alt=(1+Math.cos(t))/2;
-    let head=[180,59],s1=[161,99],s2=[199,99],h1=[165,181],h2=[195,181],hand1=[145,181],hand2=[215,181],foot1=[150,280],foot2=[210,280],elbowSides=[1,-1],kneeSides=[1,-1],sideView=false,scene='',floor=false;
+    if(!routine)return;
+    const p=phases[index],id=finished?'rest':p.id,e=ex[id],cycle=motion?animationTime/(e?.tempo||4):.18;
+    const t=cycle*Math.PI*2,q=(1-Math.cos(t))/2,op=(1+Math.cos(t))/2,breathe=Math.sin(animationTime*2)*.7;
+    let s1=[159,102],s2=[199,102],h1=[165,183],h2=[195,183],hand1=[144,179],hand2=[216,179],foot1=[153,280],foot2=[207,280],head=[179,62],armSigns=[1,-1],legSigns=[1,-1],profile=false,floor=false,scene='',phrase='Respira con normalidad';
+    const rising=Math.sin(t)>=0;
     if(['squat','heel','row','wall'].includes(id)){
-      sideView=true;s1=[180,100];s2=[174,103];h1=[178,183];h2=[172,185];head=[184,59];hand1=[181,183];hand2=[175,186];foot1=[190,280];foot2=[178,280];kneeSides=[-1,-1];elbowSides=[1,1];
-      if(id==='squat'){h1=[178-q*30,183+q*35];h2=add(h1,-6,2);s1=[180-q*8,100+q*40];s2=add(s1,-6,3);head=add(s1,4,-40);hand1=p.weights?add(s1,0,83):[235,143+q*30];hand2=add(hand1,-6,3);}
-      if(id==='heel'){const lift=-q*15;head=add(head,0,lift);s1=add(s1,0,lift);s2=add(s2,0,lift);h1=add(h1,0,lift);h2=add(h2,0,lift);hand1=add(hand1,0,lift);hand2=add(hand2,0,lift);foot1=add(foot1,0,lift);foot2=add(foot2,0,lift);}
-      if(id==='row'){h1=[156,196];h2=add(h1,-6,2);s1=[220,145];s2=add(s1,-6,3);head=[249,119];hand1=[225-q*35,227-q*50];hand2=add(hand1,-6,3);elbowSides=[-1,-1];}
-      if(id==='wall'){scene='<path d="M272 65V291" stroke="#71806b" stroke-width="8"/>';s1=[198+q*24,112];s2=add(s1,-6,3);h1=[173+q*15,196];h2=add(h1,-6,2);head=add(s1,8,-41);foot1=[155,280];foot2=[143,280];hand1=[267,133];hand2=[267,140];elbowSides=[1,1];}
+      profile=true;h1=[175,181];h2=[166,183];s1=[177,100];s2=[168,102];head=[180,62];hand1=[180,179];hand2=[171,181];foot1=[186,280];foot2=[174,280];armSigns=[1,1];legSigns=[-1,-1];
+      if(id==='squat'){
+        const hip=[175-30*q,181+36*q],lean=.04+.30*q;
+        h1=hip;h2=add(hip,-9,2);s1=add(hip,Math.sin(lean)*81,-Math.cos(lean)*81);s2=add(s1,-9,2);head=add(s1,Math.sin(lean)*35+2,-Math.cos(lean)*35-3);
+        hand1=p.weights?add(s1,4,78):add(s1,61,24+q*8);hand2=add(hand1,-9,2);
+        phrase=rising?'Lleva la cadera atrás':'Vuelve con control';
+      }
+      if(id==='heel'){
+        const lift=-q*15;h1=add(h1,0,lift);h2=add(h2,0,lift);s1=add(s1,0,lift);s2=add(s2,0,lift);head=add(head,0,lift);hand1=add(hand1,0,lift);hand2=add(hand2,0,lift);foot1=add(foot1,0,lift);foot2=add(foot2,0,lift);
+        phrase=rising?'Eleva los talones':'Baja lentamente';
+      }
+      if(id==='row'){
+        h1=[155,191];h2=add(h1,-9,2);s1=[215,138];s2=add(s1,-9,2);head=[242,112];hand1=[218-37*q,217-44*q];hand2=add(hand1,-9,2);armSigns=[-1,-1];
+        phrase=rising?'Lleva los codos atrás':'Baja las mancuernas';
+      }
+      if(id==='wall'){
+        scene='<path d="M274 74V288" stroke="#6e7f75" stroke-width="7"/><path d="M278 74V288" stroke="#ffffff15" stroke-width="2"/>';
+        const tilt=.20+.18*q;s1=[155+Math.sin(tilt)*179,280-Math.cos(tilt)*179];s2=add(s1,-9,3);h1=[155+Math.sin(tilt)*98,280-Math.cos(tilt)*98];h2=add(h1,-9,3);head=add(s1,Math.sin(tilt)*33,-Math.cos(tilt)*33-4);hand1=[268,134];hand2=[268,141];foot1=[155,280];foot2=[143,280];
+        phrase=rising?'Acerca el pecho a la pared':'Empuja con control';
+      }
     }
-    if(id==='march'){foot1=[150,280-q*37];foot2=[210,280-alt*37];hand1=[135+q*15,169-q*15];hand2=[225-alt*15,169-alt*15];}
-    if(id==='side'||id==='jack'){const sway=Math.sin(t)*15;head=add(head,sway,0);s1=add(s1,sway,0);s2=add(s2,sway,0);h1=add(h1,sway,0);h2=add(h2,sway,0);foot1=[150-q*35,280];foot2=[210-alt*35,280];hand1=add(hand1,sway,0);hand2=add(hand2,sway,0);}
-    if(id==='shoulders'||id==='jack'){const a=id==='jack'?q:q*.8;hand1=[145-a*40,181-a*103];hand2=[215+a*40,181-a*103];}
+    if(id==='march'){
+      const l=Math.max(0,Math.sin(t)),r=Math.max(0,-Math.sin(t)),sway=Math.sin(t)*3,bob=-Math.abs(Math.sin(t))*2;
+      h1=add(h1,sway,bob);h2=add(h2,sway,bob);s1=add(s1,sway*.65,bob);s2=add(s2,sway*.65,bob);head=add(head,sway*.45,bob);
+      foot1=[153-9*l,280-49*l];foot2=[207+9*r,280-49*r];
+      hand1=[145+13*r,178-25*r];hand2=[215-13*l,178-25*l];
+      phrase=Math.sin(t)>=0?'Rodilla izquierda · brazo contrario':'Rodilla derecha · brazo contrario';
+    }
+    if(id==='side'||id==='jack'){
+      const phase=((cycle%2)+2)%2,left=phase<1,u=phase%1,step=(1-Math.cos(u*Math.PI*2))/2,shift=(left?-1:1)*step*13,lift=Math.pow(Math.max(0,Math.sin(u*Math.PI*2)),2)*7;
+      s1=add(s1,shift,step*2);s2=add(s2,shift,step*2);h1=add(h1,shift,step*2);h2=add(h2,shift,step*2);head=add(head,shift*.9,step*2);
+      if(left)foot1=[153-step*42,280-lift];else foot2=[207+step*42,280-lift];
+      hand1=add(hand1,shift,step*3);hand2=add(hand2,shift,step*3);
+      if(id==='jack'){
+        const angle=step*1.6;hand1=point(s1,-.15-angle,77);hand2=point(s2,.15+angle,77);
+      }
+      phrase=left?'Abre a la izquierda y regresa':'Abre a la derecha y regresa';
+    }
+    if(id==='shoulders'){
+      const a=.14+q*1.95;hand1=point(s1,-a,77);hand2=point(s2,a,77);
+      phrase=rising?'Eleva hasta un rango cómodo':'Regresa suavemente';
+    }
     if(id==='bridge'||id==='press'){
-      floor=true;sideView=true;scene='<rect x="42" y="281" width="276" height="8" rx="4" fill="#65744c"/>';head=[76,257];s1=[106,263];s2=[106,257];h1=[191,263-(id==='bridge'?q*40:0)];h2=add(h1,0,-6);foot1=[267,276];foot2=[261,271];kneeSides=[-1,-1];hand1=id==='press'?[115,216-q*35]:[181,273];hand2=add(hand1,0,-7);elbowSides=[-1,-1];
+      profile=true;floor=true;scene='<rect x="45" y="279" width="267" height="9" rx="4" fill="#41553e"/><path d="M53 282H306" stroke="#83a563" stroke-width="1"/>';
+      head=[75,257];s1=[105,261];s2=[105,253];h1=[184,260-(id==='bridge'?q*38:0)];h2=add(h1,0,-8);foot1=[260,275];foot2=[255,269];legSigns=[-1,-1];armSigns=[-1,-1];
+      hand1=id==='press'?[112+q*2,219-q*35]:[180,272];hand2=add(hand1,0,-8);
+      phrase=id==='bridge'?(rising?'Eleva la pelvis, sin arquear':'Baja con control'):(rising?'Empuja sobre el pecho':'Baja hasta el suelo');
     }
-    const poly=(pts,color,width)=>`<polyline points="${pts.map(v=>v.join(',')).join(' ')}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"/>`;
-    const limb=(a,b,l1,l2,sign,color,width)=>{const j=joint(a,b,l1,l2,sign);return poly([a,j,b],color,width)+`<circle cx="${j[0]}" cy="${j[1]}" r="${width*.33}" fill="#172020" stroke="${color}" stroke-width="2"/>`;};
-    const leg1=limb(h1,foot1,53,50,kneeSides[0],'#b1db4a',19),leg2=limb(h2,foot2,53,50,kneeSides[1],'#678c37',18);
-    const arm1=limb(s1,hand1,43,43,elbowSides[0],'#d3dcdf',13),arm2=limb(s2,hand2,43,43,elbowSides[1],'#7b8e93',12);
-    const shoulderMid=[(s1[0]+s2[0])/2,(s1[1]+s2[1])/2],hipMid=[(h1[0]+h2[0])/2,(h1[1]+h2[1])/2];
-    const torso=poly([shoulderMid,hipMid],'url(#bodyGradient)',sideView?31:42)+poly([shoulderMid,hipMid],'#ddff7940',3);
-    const shoe=(v)=>`<path d="M${v[0]-8} ${v[1]+3}${id==='heel'?`L${v[0]+15} 283`:'h23'}" stroke="#edf0e7" stroke-width="9" stroke-linecap="round"/>`;
-    $('#figureLimbs').innerHTML=scene+leg2+arm2+torso+leg1+arm1+`<circle cx="${head[0]}" cy="${head[1]}" r="20" fill="#d8e1e3"/><path d="M${head[0]-12} ${head[1]-3}h23" stroke="#657579" stroke-width="4" stroke-linecap="round"/>`+shoe(foot1)+shoe(foot2);
-    $('#figureWeights').innerHTML=p.weights&&id!=='rest'? [hand2,hand1].map(([x,y])=>`<g transform="translate(${x} ${y})"><rect x="-15" y="-3" width="30" height="6" rx="2" fill="#9daaac"/><rect x="-20" y="-11" width="10" height="22" rx="3" fill="#dbe3e5"/><rect x="10" y="-11" width="10" height="22" rx="3" fill="#dbe3e5"/></g>`).join(''):'';
+    if(id==='rest'){s1=add(s1,0,breathe);s2=add(s2,0,breathe);head=add(head,0,breathe);phrase=finished?'Buen trabajo':'Recupera el ritmo';}
+    const n=v=>Math.round(v*100)/100,coords=p=>p.map(n).join(' ');
+    const line=(a,b,color,width)=>`<path d="M${coords(a)}L${coords(b)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`;
+    const arm=(a,b,sign,far)=>{const j=joint(a,b,40,40,sign),skin=far?'#a87859':'#d8aa86';return line(a,j,skin,14)+line(j,b,skin,11)+`<ellipse cx="${n(b[0])}" cy="${n(b[1])}" rx="6" ry="7" fill="${skin}"/>`+line(a,mix(a,j,.34),far?'#668937':'#b0dc52',18);};
+    const leg=(a,b,sign,far)=>{const j=joint(a,b,51,49,sign);return line(a,j,far?'#a87859':'#d8aa86',19)+line(j,b,far?'#a87859':'#d8aa86',14)+line(a,mix(a,j,.46),far?'#182423':'#263936',23);};
+    const sm=center(s1,s2),hm=center(h1,h2),dx=hm[0]-sm[0],dy=hm[1]-sm[1],len=Math.hypot(dx,dy)||1,normal=[dy/len,-dx/len];
+    const edge=(v,w)=>add(v,normal[0]*w,normal[1]*w),width=profile?15:23,waist=profile?13:17,sl=edge(sm,width),sr=edge(sm,-width),hl=edge(hm,waist),hr=edge(hm,-waist),ml=edge(mix(sm,hm,.5),width*.8),mr=edge(mix(sm,hm,.5),-width*.8);
+    const torso=`<path d="M${coords(sl)}Q${coords(edge(sm,0))} ${coords(sr)}Q${coords(mr)} ${coords(hr)}Q${coords(hm)} ${coords(hl)}Q${coords(ml)} ${coords(sl)}Z" fill="url(#bodyGradient)"/><path d="M${coords(mix(sl,hl,.15))}Q${coords(ml)} ${coords(mix(sl,hl,.83))}" fill="none" stroke="#ecffb0" stroke-opacity=".35" stroke-width="3"/>`;
+    const neck=add(sm,(head[0]-sm[0])*.38,(head[1]-sm[1])*.38);
+    const face=profile?`<path d="M${head[0]+13} ${head[1]-5}l7 7-6 3" fill="#d8aa86"/><circle cx="${head[0]+9}" cy="${head[1]-4}" r="1.5" fill="#453831"/>`:`<path d="M${head[0]-7} ${head[1]+8}q7 4 14 0" fill="none" stroke="#a27053" stroke-width="1.5"/>`;
+    const hair=`<path d="M${head[0]-15} ${head[1]-4}q-1-20 15-20q19 0 17 20q-7-8-15-8q-10 0-17 8" fill="#25302d"/>`;
+    const shoe=v=>{const toe=[v[0]+17,id==='heel'?280:v[1]+3],heel=add(v,-8,1);return `<path d="M${coords(heel)}Q${coords(add(v,3,-6))} ${coords(toe)}L${coords(add(toe,0,4))}L${coords(add(heel,0,4))}Z" fill="#eef2e7"/>`+line(add(heel,0,4),add(toe,0,4),'#87988d',2);};
+    const markers={squat:[300,166,300,214],heel:[249,248,249,218],row:[283,219,257,182],wall:[232,75,253,75],bridge:[193,220,193,185],press:[139,208,139,175],shoulders:[290,168,290,118],march:[112,235,112,204],side:[92,246,64,246],jack:[285,192,285,151]};
+    const m=markers[id];const guide=m?`<path d="M${m[0]} ${m[1]}L${m[2]} ${m[3]}" fill="none" stroke="#c1ff34" stroke-opacity=".5" stroke-width="1.5" stroke-dasharray="3 5"/><circle cx="${m[2]}" cy="${m[3]}" r="3" fill="#c1ff34" fill-opacity=".6"/>`:'';
+    $('#figureLimbs').innerHTML=scene+guide+leg(h2,foot2,legSigns[1],true)+arm(s2,hand2,armSigns[1],true)+line(sm,neck,'#d8aa86',13)+torso+leg(h1,foot1,legSigns[0],false)+arm(s1,hand1,armSigns[0],false)+`<g${floor?` transform="rotate(-90 ${n(head[0])} ${n(head[1])})"`:""}><ellipse cx="${n(head[0])}" cy="${n(head[1])}" rx="${profile?15:17}" ry="21" fill="#d8aa86"/>`+face+hair+'</g>'+shoe(foot2)+shoe(foot1);
+    $('#figureWeights').innerHTML=p.weights&&id!=='rest'?[hand2,hand1].map(([x,y])=>`<g transform="translate(${n(x)} ${n(y)})"><rect x="-14" y="-3" width="28" height="6" rx="2" fill="#abb5b6"/><rect x="-20" y="-10" width="10" height="20" rx="3" fill="#313e42" stroke="#98a9ad"/><rect x="10" y="-10" width="10" height="20" rx="3" fill="#313e42" stroke="#98a9ad"/></g>`).join(''):'';
+    $('#movementLabel').textContent=`${e?.view||'Recuperación'} · ${phrase}`;
   }
   document.querySelectorAll('[data-workout]').forEach(b=>{b.setAttribute('aria-haspopup','dialog');b.addEventListener('click',()=>{opener=b;select(b.dataset.workout);});});
   document.querySelectorAll('[data-workout-filter]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-workout-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.querySelectorAll('[data-workout-category]').forEach(c=>c.hidden=b.dataset.workoutFilter!=='all'&&c.dataset.workoutCategory!==b.dataset.workoutFilter);}));
@@ -115,5 +164,13 @@
   dialog.addEventListener('cancel',pause);dialog.addEventListener('close',()=>{pause();document.body.classList.remove('workout-modal-open');opener?.focus();});
   dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&active)pause();});window.addEventListener('pagehide',pause);
-  setInterval(()=>{const now=Date.now(),delta=Math.min(100,Math.max(0,now-frameLast));frameLast=now;if(!routine||!dialog.open||document.hidden)return;if(motion&&(!started||active))animationTime+=delta/1000;figure();},40);
+  function animateFrame(){
+    const now=Date.now(),delta=Math.min(50,Math.max(0,now-frameLast));frameLast=now;
+    if(routine&&dialog.open&&!document.hidden&&motion&&(!started||active)){
+      animationTime+=delta/1000;
+      figure();
+    }
+    window.requestAnimationFrame(animateFrame);
+  }
+  window.requestAnimationFrame(animateFrame);
 })();
