@@ -227,11 +227,15 @@
       $('#recipeImage').src = selected.image;
       $('#recipeImage').alt = selected.imageAlt;
       $('#recipeImage').hidden = false;
-      $('#recipeMeta').textContent = `${selected.category} · ${selected.time} aprox.`;
+      $('#recipeMeta').textContent = selected.category;
+      $('#recipeTime').textContent = selected.time;
+      $('#recipeServings').textContent = `${selected.servings} ${selected.servings === 1 ? 'porción' : 'porciones'}`;
+      $('#recipeNote').textContent = selected.note;
       listItems($('#recipeIngredients'), selected.ingredients);
       listItems($('#recipeSteps'), selected.steps);
       $('#addIngredients').textContent = 'Añadir a mi lista +';
       dialog.showModal();
+      dialog.scrollTop = 0;
     }));
     function drawShopping() {
       const target = $('#shoppingList'); target.replaceChildren();

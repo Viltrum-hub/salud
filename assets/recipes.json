@@ -5,21 +5,24 @@
     "category": "almuerzo",
     "time": "15 min",
     "ingredients": [
-      "Garbanzos cocidos",
-      "Arroz integral cocido",
-      "Tomate",
-      "Aguacate",
-      "Hojas verdes",
-      "Limón y aceite de oliva"
+      "½ taza de garbanzos cocidos (80 g)",
+      "½ taza de arroz integral cocido (100 g)",
+      "1 tomate pequeño",
+      "¼ de aguacate",
+      "1 taza de hojas verdes",
+      "1 cucharada de jugo de limón",
+      "1 cucharadita de aceite de oliva"
     ],
     "steps": [
-      "Lava los vegetales y corta el tomate y el aguacate.",
-      "Combina el arroz, los garbanzos y las hojas verdes en un bowl.",
-      "Añade tomate, aguacate y un toque de limón y aceite."
+      "Lava las hojas y el tomate. Corta el tomate y el aguacate en cubos.",
+      "Coloca el arroz y los garbanzos escurridos en un bowl. Añade los vegetales.",
+      "Mezcla el limón con el aceite y distribúyelo sobre el plato."
     ],
     "desc": "Una idea flexible con legumbres, cereales y vegetales.",
     "image": "assets/alimentacion.webp",
-    "imageAlt": "Bowl de garbanzos con arroz, aguacate, tomate y hojas verdes."
+    "imageAlt": "Bowl de garbanzos con arroz, aguacate, tomate y hojas verdes.",
+    "servings": 1,
+    "note": "El tiempo supone arroz y garbanzos ya cocidos."
   },
   {
     "id": "avena",
@@ -27,63 +30,69 @@
     "category": "desayuno",
     "time": "10 min",
     "ingredients": [
-      "Avena",
-      "Leche o bebida vegetal",
-      "Banano",
-      "Fruta de temporada",
-      "Canela"
+      "½ taza de avena en hojuelas (40 g)",
+      "1 taza de leche o bebida vegetal (240 ml)",
+      "½ banano",
+      "½ taza de fresas",
+      "¼ cucharadita de canela"
     ],
     "steps": [
-      "Cocina la avena con el líquido hasta obtener una textura cómoda.",
-      "Añade banano y fruta lavada y cortada.",
-      "Termina con canela al gusto."
+      "Calienta la leche a fuego medio. Añade la avena y cocina 5–7 minutos, removiendo.",
+      "Lava las fresas. Corta las fresas y el banano en rodajas.",
+      "Sirve la avena, añade la fruta y espolvorea la canela."
     ],
     "desc": "Un desayuno sencillo que puedes adaptar a tu gusto.",
     "image": "assets/recetas/avena.webp",
-    "imageAlt": "Avena cocida con banano, fresas y canela."
+    "imageAlt": "Avena cocida con banano, fresas y canela.",
+    "servings": 1,
+    "note": "Usa avena tradicional en hojuelas; ajusta el líquido si la prefieres más ligera."
   },
   {
     "id": "tostada",
     "name": "Tostada de aguacate",
     "category": "desayuno",
-    "time": "10 min",
+    "time": "20 min",
     "ingredients": [
-      "Pan integral",
-      "Aguacate",
-      "Tomate",
-      "Huevo bien cocido",
-      "Limón"
+      "1 rebanada de pan integral",
+      "¼ de aguacate",
+      "½ tomate pequeño",
+      "1 huevo",
+      "1 cucharadita de jugo de limón"
     ],
     "steps": [
-      "Tuesta el pan y coloca el aguacate triturado.",
-      "Añade tomate lavado y cortado, y el huevo bien cocido.",
-      "Termina con unas gotas de limón."
+      "Cubre el huevo con agua. Al hervir, cocina 10–12 minutos; enfría, pela y corta.",
+      "Tuesta el pan. Tritura el aguacate con el limón y extiéndelo sobre la tostada.",
+      "Lava y corta el tomate. Colócalo sobre el aguacate y añade el huevo."
     ],
     "desc": "Ingredientes cotidianos en una preparación rápida.",
     "image": "assets/recetas/tostada.webp",
-    "imageAlt": "Tostada integral con aguacate, tomate y huevo cocido."
+    "imageAlt": "Tostada integral con aguacate, tomate y huevo cocido.",
+    "servings": 1,
+    "note": "Comprueba que la clara y la yema estén firmes."
   },
   {
     "id": "ensalada",
     "name": "Ensalada de frijoles",
     "category": "almuerzo",
-    "time": "15 min",
+    "time": "10 min",
     "ingredients": [
-      "Frijoles cocidos",
-      "Tomate",
-      "Pepino",
-      "Maíz cocido",
-      "Cilantro",
-      "Limón"
+      "¾ de taza de frijoles cocidos (130 g)",
+      "1 tomate pequeño",
+      "½ pepino pequeño",
+      "¼ de taza de maíz cocido (40 g)",
+      "1 cucharada de cilantro picado",
+      "1 cucharada de jugo de limón"
     ],
     "steps": [
-      "Lava y corta los vegetales.",
-      "Mezcla con los frijoles y el maíz.",
-      "Añade cilantro y limón al gusto."
+      "Escurre los frijoles y el maíz. Lava el tomate, el pepino y el cilantro.",
+      "Corta el tomate y el pepino en cubos; mézclalos con los frijoles y el maíz.",
+      "Añade el cilantro y el limón. Mezcla y sirve."
     ],
     "desc": "Una combinación fresca con ingredientes accesibles.",
     "image": "assets/recetas/ensalada.webp",
-    "imageAlt": "Ensalada de frijoles con pepino, tomate, maíz y cilantro."
+    "imageAlt": "Ensalada de frijoles con pepino, tomate, maíz y cilantro.",
+    "servings": 1,
+    "note": "El tiempo supone frijoles y maíz ya cocidos."
   },
   {
     "id": "fruta",
@@ -91,18 +100,21 @@
     "category": "merienda",
     "time": "5 min",
     "ingredients": [
-      "Yogur natural o alternativa vegetal",
-      "Fruta de temporada",
-      "Avena"
+      "¾ de taza de yogur natural o alternativa vegetal (170 g)",
+      "½ banano",
+      "½ taza de fresas o arándanos",
+      "2 cucharadas de avena en hojuelas"
     ],
     "steps": [
-      "Lava y corta la fruta.",
-      "Colócala sobre el yogur.",
-      "Añade avena y sirve."
+      "Lava las fresas o los arándanos. Corta el banano y las fresas, si las usas.",
+      "Sirve el yogur en un bowl y distribuye la fruta encima.",
+      "Añade las dos cucharadas de avena y sirve."
     ],
     "desc": "Una merienda simple para variar durante la semana.",
     "image": "assets/recetas/fruta.webp",
-    "imageAlt": "Yogur natural con fruta fresca y avena."
+    "imageAlt": "Yogur natural con fruta fresca y avena.",
+    "servings": 1,
+    "note": "Puedes sustituir la fruta por otra de temporada."
   },
   {
     "id": "hummus",
@@ -110,20 +122,22 @@
     "category": "merienda",
     "time": "10 min",
     "ingredients": [
-      "Garbanzos cocidos",
-      "Limón",
-      "Aceite de oliva",
-      "Agua",
-      "Zanahoria",
-      "Pepino"
+      "1 taza de garbanzos cocidos (160 g)",
+      "1 cucharada de jugo de limón",
+      "1 cucharada de aceite de oliva",
+      "2–3 cucharadas de agua",
+      "1 zanahoria mediana",
+      "½ pepino"
     ],
     "steps": [
-      "Tritura los garbanzos con limón, un poco de aceite y agua.",
-      "Ajusta la textura a tu gusto.",
-      "Sirve con vegetales lavados y cortados."
+      "Escurre los garbanzos y tritúralos con el limón, el aceite y 2 cucharadas de agua.",
+      "Si queda espeso, añade la cucharada restante de agua y vuelve a triturar.",
+      "Lava la zanahoria y el pepino, córtalos en bastones y sirve con la crema."
     ],
     "desc": "Una idea para acompañar con vegetales frescos.",
     "image": "assets/recetas/hummus.webp",
-    "imageAlt": "Hummus de garbanzos acompañado de bastones de zanahoria y pepino."
+    "imageAlt": "Hummus de garbanzos acompañado de bastones de zanahoria y pepino.",
+    "servings": 2,
+    "note": "Necesitas una licuadora o procesador; también puedes triturar con un tenedor."
   }
 ]
