@@ -11,7 +11,6 @@ Sitio web de salud y bienestar con identidad deportiva: blanco, negro y verde li
 - `descanso.html`: planificador de horarios y rutina nocturna.
 - `mi-espacio.html`: hábitos, registros recientes y descarga o eliminación de datos.
 - `nosotros.html`: enfoque e identidad de VITAL.
-- `recursos.html`: fuentes públicas y preguntas frecuentes.
 
 ## Uso
 
@@ -31,4 +30,4 @@ Los datos se guardan en `localStorage` con la clave `vital-wellbeing-v1`, solo e
 
 ## Contenido
 
-El contenido es educativo. Las fuentes de OMS y CDC están enlazadas en Recursos y en las áreas correspondientes. Las herramientas no ofrecen diagnósticos o tratamientos. Las fotografías de recetas son ilustrativas.
+El contenido es educativo. Las fuentes de OMS y CDC están enlazadas en las áreas correspondientes. Las herramientas no ofrecen diagnósticos o tratamientos. Las fotografías de recetas son ilustrativas.

@@ -6,3 +6,5 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.breath-orb.expand{transform:none}}
 
 .dark-section .tool-box p{color:var(--muted)}
+
+.recipe-detail-image{height:260px;margin:0 0 24px;object-fit:cover}.recipe-detail-image[hidden]{display:none}@media(max-width:600px){.recipe-detail-image{height:200px}}

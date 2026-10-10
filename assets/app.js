@@ -224,6 +224,9 @@
       if (!selected) { toast('La receta no está disponible en este momento.'); return; }
       $('#recipeTitle').textContent = selected.name;
       $('#recipeDescription').textContent = selected.desc;
+      $('#recipeImage').src = selected.image;
+      $('#recipeImage').alt = selected.imageAlt;
+      $('#recipeImage').hidden = false;
       $('#recipeMeta').textContent = `${selected.category} · ${selected.time} aprox.`;
       listItems($('#recipeIngredients'), selected.ingredients);
       listItems($('#recipeSteps'), selected.steps);

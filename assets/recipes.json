@@ -17,7 +17,9 @@
       "Combina el arroz, los garbanzos y las hojas verdes en un bowl.",
       "Añade tomate, aguacate y un toque de limón y aceite."
     ],
-    "desc": "Una idea flexible con legumbres, cereales y vegetales."
+    "desc": "Una idea flexible con legumbres, cereales y vegetales.",
+    "image": "assets/alimentacion.webp",
+    "imageAlt": "Bowl de garbanzos con arroz, aguacate, tomate y hojas verdes."
   },
   {
     "id": "avena",
@@ -36,7 +38,9 @@
       "Añade banano y fruta lavada y cortada.",
       "Termina con canela al gusto."
     ],
-    "desc": "Un desayuno sencillo que puedes adaptar a tu gusto."
+    "desc": "Un desayuno sencillo que puedes adaptar a tu gusto.",
+    "image": "assets/recetas/avena.webp",
+    "imageAlt": "Avena cocida con banano, fresas y canela."
   },
   {
     "id": "tostada",
@@ -55,7 +59,9 @@
       "Añade tomate lavado y cortado, y el huevo bien cocido.",
       "Termina con unas gotas de limón."
     ],
-    "desc": "Ingredientes cotidianos en una preparación rápida."
+    "desc": "Ingredientes cotidianos en una preparación rápida.",
+    "image": "assets/recetas/tostada.webp",
+    "imageAlt": "Tostada integral con aguacate, tomate y huevo cocido."
   },
   {
     "id": "ensalada",
@@ -75,7 +81,9 @@
       "Mezcla con los frijoles y el maíz.",
       "Añade cilantro y limón al gusto."
     ],
-    "desc": "Una combinación fresca con ingredientes accesibles."
+    "desc": "Una combinación fresca con ingredientes accesibles.",
+    "image": "assets/recetas/ensalada.webp",
+    "imageAlt": "Ensalada de frijoles con pepino, tomate, maíz y cilantro."
   },
   {
     "id": "fruta",
@@ -92,7 +100,9 @@
       "Colócala sobre el yogur.",
       "Añade avena y sirve."
     ],
-    "desc": "Una merienda simple para variar durante la semana."
+    "desc": "Una merienda simple para variar durante la semana.",
+    "image": "assets/recetas/fruta.webp",
+    "imageAlt": "Yogur natural con fruta fresca y avena."
   },
   {
     "id": "hummus",
@@ -112,6 +122,8 @@
       "Ajusta la textura a tu gusto.",
       "Sirve con vegetales lavados y cortados."
     ],
-    "desc": "Una idea para acompañar con vegetales frescos."
+    "desc": "Una idea para acompañar con vegetales frescos.",
+    "image": "assets/recetas/hummus.webp",
+    "imageAlt": "Hummus de garbanzos acompañado de bastones de zanahoria y pepino."
   }
 ]
