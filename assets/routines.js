@@ -80,12 +80,17 @@
   const center=(a,b)=>mix(a,b,.5);
   const point=(p,a,l)=>[p[0]+Math.sin(a)*l,p[1]+Math.cos(a)*l];
   function joint(a,b,l1,l2,side=1){const dx=b[0]-a[0],dy=b[1]-a[1],raw=Math.hypot(dx,dy)||1,d=Math.min(l1+l2-.05,Math.max(Math.abs(l1-l2)+.05,raw)),ux=dx/raw,uy=dy/raw,k=(l1*l1-l2*l2+d*d)/(2*d),h=Math.sqrt(Math.max(0,l1*l1-k*k));return[a[0]+ux*k-uy*h*side,a[1]+uy*k+ux*h*side];}
+  let lastFigureId;
   function figure(){
     if(!routine)return;
     const p=phases[index],id=finished?'rest':p.id,e=ex[id],cycle=motion?animationTime/(e?.tempo||4):.18;
-    const t=cycle*Math.PI*2,q=(1-Math.cos(t))/2,op=(1+Math.cos(t))/2,breathe=Math.sin(animationTime*2)*.7;
+    const phase=((cycle%1)+1)%1,t=cycle*Math.PI*2;
+    const ease=u=>(1-Math.cos(Math.PI*Math.max(0,Math.min(1,u))))/2;
+    // Controlled lowering, a short turnaround, then a steady return.
+    const q=phase<.55?ease(phase/.55):phase<.61?1:phase<.96?1-ease((phase-.61)/.35):0;
+    const breathe=Math.sin(animationTime*1.8)*.5;
     let s1=[159,102],s2=[199,102],h1=[165,183],h2=[195,183],hand1=[144,179],hand2=[216,179],foot1=[153,280],foot2=[207,280],head=[179,62],armSigns=[1,-1],legSigns=[1,-1],profile=false,floor=false,scene='',phrase='Respira con normalidad';
-    const rising=Math.sin(t)>=0;
+    const rising=phase<.61;
     if(['squat','heel','row','wall'].includes(id)){
       profile=true;h1=[175,181];h2=[166,183];s1=[177,100];s2=[168,102];head=[180,62];hand1=[180,179];hand2=[171,181];foot1=[186,280];foot2=[174,280];armSigns=[1,1];legSigns=[-1,-1];
       if(id==='squat'){
@@ -109,10 +114,10 @@
       }
     }
     if(id==='march'){
-      const l=Math.max(0,Math.sin(t)),r=Math.max(0,-Math.sin(t)),sway=Math.sin(t)*3,bob=-Math.abs(Math.sin(t))*2;
+      const l=Math.pow(Math.max(0,Math.sin(t)),2),r=Math.pow(Math.max(0,-Math.sin(t)),2),sway=Math.sin(t)*4,bob=-Math.pow(Math.sin(t),2)*2;
       h1=add(h1,sway,bob);h2=add(h2,sway,bob);s1=add(s1,sway*.65,bob);s2=add(s2,sway*.65,bob);head=add(head,sway*.45,bob);
-      foot1=[153-9*l,280-49*l];foot2=[207+9*r,280-49*r];
-      hand1=[145+13*r,178-25*r];hand2=[215-13*l,178-25*l];
+      foot1=[153-9*l,280-40*l];foot2=[207+9*r,280-40*r];
+      hand1=[145+10*r,178-21*r];hand2=[215-10*l,178-21*l];
       phrase=Math.sin(t)>=0?'Rodilla izquierda · brazo contrario':'Rodilla derecha · brazo contrario';
     }
     if(id==='side'||id==='jack'){
@@ -138,20 +143,28 @@
     if(id==='rest'){s1=add(s1,0,breathe);s2=add(s2,0,breathe);head=add(head,0,breathe);phrase=finished?'Buen trabajo':'Recupera el ritmo';}
     const n=v=>Math.round(v*100)/100,coords=p=>p.map(n).join(' ');
     const line=(a,b,color,width)=>`<path d="M${coords(a)}L${coords(b)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`;
-    const arm=(a,b,sign,far)=>{const j=joint(a,b,40,40,sign),skin=far?'#a87859':'#d8aa86';return line(a,j,skin,14)+line(j,b,skin,11)+`<ellipse cx="${n(b[0])}" cy="${n(b[1])}" rx="6" ry="7" fill="${skin}"/>`+line(a,mix(a,j,.34),far?'#668937':'#b0dc52',18);};
-    const leg=(a,b,sign,far)=>{const j=joint(a,b,51,49,sign);return line(a,j,far?'#a87859':'#d8aa86',19)+line(j,b,far?'#a87859':'#d8aa86',14)+line(a,mix(a,j,.46),far?'#182423':'#263936',23);};
+    const arm=(a,b,sign,far)=>{
+      const j=joint(a,b,40,40,sign),tone=far?'#819091':'url(#limbPearl)';
+      return line(a,j,tone,15)+line(j,b,tone,12)+`<ellipse cx="${n(b[0])}" cy="${n(b[1])}" rx="5.5" ry="6.5" fill="${far?'#879597':'#dce5e3'}"/>`+line(mix(a,j,.08),mix(a,j,.55),far?'#566562':'#edf2e6',1.3);
+    };
+    const leg=(a,b,sign,far)=>{
+      const j=joint(a,b,51,49,sign),tone=far?'#66844a':'url(#legGraphite)';
+      return line(a,j,tone,23)+line(j,b,tone,16)+line(mix(a,j,.1),mix(a,j,.38),far?'#89a765':'#def4ab',2.5)+line(mix(j,b,.15),mix(j,b,.8),far?'#779755':'#bad98b',1.3);
+    };
     const sm=center(s1,s2),hm=center(h1,h2),dx=hm[0]-sm[0],dy=hm[1]-sm[1],len=Math.hypot(dx,dy)||1,normal=[dy/len,-dx/len];
     const edge=(v,w)=>add(v,normal[0]*w,normal[1]*w),width=profile?15:23,waist=profile?13:17,sl=edge(sm,width),sr=edge(sm,-width),hl=edge(hm,waist),hr=edge(hm,-waist),ml=edge(mix(sm,hm,.5),width*.8),mr=edge(mix(sm,hm,.5),-width*.8);
     const torso=`<path d="M${coords(sl)}Q${coords(edge(sm,0))} ${coords(sr)}Q${coords(mr)} ${coords(hr)}Q${coords(hm)} ${coords(hl)}Q${coords(ml)} ${coords(sl)}Z" fill="url(#bodyGradient)"/><path d="M${coords(mix(sl,hl,.15))}Q${coords(ml)} ${coords(mix(sl,hl,.83))}" fill="none" stroke="#ecffb0" stroke-opacity=".35" stroke-width="3"/>`;
     const neck=add(sm,(head[0]-sm[0])*.38,(head[1]-sm[1])*.38);
-    const face=profile?`<path d="M${head[0]+13} ${head[1]-5}l7 7-6 3" fill="#d8aa86"/><circle cx="${head[0]+9}" cy="${head[1]-4}" r="1.5" fill="#453831"/>`:`<path d="M${head[0]-7} ${head[1]+8}q7 4 14 0" fill="none" stroke="#a27053" stroke-width="1.5"/>`;
-    const hair=`<path d="M${head[0]-15} ${head[1]-4}q-1-20 15-20q19 0 17 20q-7-8-15-8q-10 0-17 8" fill="#25302d"/>`;
+    const face=`<path d="M${n(head[0]+(profile?6:-8))} ${n(head[1]-14)}q-5 12-1 26" fill="none" stroke="#f8fff9" stroke-opacity=".32" stroke-width="2"/>`;
     const shoe=v=>{const toe=[v[0]+17,id==='heel'?280:v[1]+3],heel=add(v,-8,1);return `<path d="M${coords(heel)}Q${coords(add(v,3,-6))} ${coords(toe)}L${coords(add(toe,0,4))}L${coords(add(heel,0,4))}Z" fill="#eef2e7"/>`+line(add(heel,0,4),add(toe,0,4),'#87988d',2);};
     const markers={squat:[300,166,300,214],heel:[249,248,249,218],row:[283,219,257,182],wall:[232,75,253,75],bridge:[193,220,193,185],press:[139,208,139,175],shoulders:[290,168,290,118],march:[112,235,112,204],side:[92,246,64,246],jack:[285,192,285,151]};
-    const m=markers[id];const guide=m?`<path d="M${m[0]} ${m[1]}L${m[2]} ${m[3]}" fill="none" stroke="#c1ff34" stroke-opacity=".5" stroke-width="1.5" stroke-dasharray="3 5"/><circle cx="${m[2]}" cy="${m[3]}" r="3" fill="#c1ff34" fill-opacity=".6"/>`:'';
-    $('#figureLimbs').innerHTML=scene+guide+leg(h2,foot2,legSigns[1],true)+arm(s2,hand2,armSigns[1],true)+line(sm,neck,'#d8aa86',13)+torso+leg(h1,foot1,legSigns[0],false)+arm(s1,hand1,armSigns[0],false)+`<g${floor?` transform="rotate(-90 ${n(head[0])} ${n(head[1])})"`:""}><ellipse cx="${n(head[0])}" cy="${n(head[1])}" rx="${profile?15:17}" ry="21" fill="#d8aa86"/>`+face+hair+'</g>'+shoe(foot2)+shoe(foot1);
+    const m=markers[id];const arrow=m?(rising||['march','side','jack'].includes(id)?m:[m[2],m[3],m[0],m[1]]):null;
+    const guide=arrow?`<path d="M${arrow[0]} ${arrow[1]}L${arrow[2]} ${arrow[3]}" fill="none" stroke="#c1ff34" stroke-opacity=".7" stroke-width="1.5" marker-end="url(#motionArrow)"/>`:'';
+    $('#figureLimbs').innerHTML=scene+guide+leg(h2,foot2,legSigns[1],true)+arm(s2,hand2,armSigns[1],true)+line(sm,neck,'#becbc7',12)+torso+leg(h1,foot1,legSigns[0],false)+arm(s1,hand1,armSigns[0],false)+`<g${floor?` transform="rotate(-90 ${n(head[0])} ${n(head[1])})"`:""}><ellipse cx="${n(head[0])}" cy="${n(head[1])}" rx="${profile?15:17}" ry="21" fill="url(#limbPearl)"/>`+face+'</g>'+shoe(foot2)+shoe(foot1);
     $('#figureWeights').innerHTML=p.weights&&id!=='rest'?[hand2,hand1].map(([x,y])=>`<g transform="translate(${n(x)} ${n(y)})"><rect x="-14" y="-3" width="28" height="6" rx="2" fill="#abb5b6"/><rect x="-20" y="-10" width="10" height="20" rx="3" fill="#313e42" stroke="#98a9ad"/><rect x="10" y="-10" width="10" height="20" rx="3" fill="#313e42" stroke="#98a9ad"/></g>`).join(''):'';
     $('#movementLabel').textContent=`${e?.view||'Recuperación'} · ${phrase}`;
+    if(lastFigureId!==id){if(motion)$('#exerciseFigure').animate?.([{opacity:.35},{opacity:1}],{duration:280,easing:'ease-out'});lastFigureId=id;}
+
   }
   document.querySelectorAll('[data-workout]').forEach(b=>{b.setAttribute('aria-haspopup','dialog');b.addEventListener('click',()=>{opener=b;select(b.dataset.workout);});});
   document.querySelectorAll('[data-workout-filter]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-workout-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.querySelectorAll('[data-workout-category]').forEach(c=>c.hidden=b.dataset.workoutFilter!=='all'&&c.dataset.workoutCategory!==b.dataset.workoutFilter);}));
