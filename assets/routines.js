@@ -107,7 +107,14 @@
     $('#movementLabel').textContent=`${e?.view||'Recuperación'} · ${pose.phrase}`;
     if(lastFigureId!==id){if(motion)$('#exerciseFigure').animate?.([{opacity:.35},{opacity:1}],{duration:280,easing:'ease-out'});lastFigureId=id;}
   }
-  document.querySelectorAll('[data-workout]').forEach(b=>{b.setAttribute('aria-haspopup','dialog');b.addEventListener('click',()=>{opener=b;select(b.dataset.workout);});});
+  const picker=$('#trainingPicker'),launch=$('#trainingOpen');
+  function openPicker(){picker.showModal();document.body.classList.add('workout-modal-open');}
+  launch.addEventListener('click',openPicker);
+  $('#trainingPickerClose').addEventListener('click',()=>picker.close());
+  picker.addEventListener('close',()=>{document.body.classList.toggle('workout-modal-open',dialog.open||picker.open);if(!dialog.open&&!picker.open)launch.focus();});
+  picker.addEventListener('click',event=>{if(event.target!==picker)return;const r=picker.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)picker.close();});
+  $('#workoutBack').addEventListener('click',()=>{dialog.close();openPicker();if(picker.open)opener?.focus();else launch.focus();});
+  document.querySelectorAll('[data-workout]').forEach(b=>{b.setAttribute('aria-haspopup','dialog');b.addEventListener('click',()=>{opener=b;if(picker.open)picker.close();select(b.dataset.workout);});});
   document.querySelectorAll('[data-workout-filter]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-workout-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.querySelectorAll('[data-workout-category]').forEach(c=>c.hidden=b.dataset.workoutFilter!=='all'&&c.dataset.workoutCategory!==b.dataset.workoutFilter);}));
   $('#workoutStart').addEventListener('click',()=>{if(active){pause();return;}if(finished)select(selectedId,true);active=true;started=true;last=Date.now();timer=setInterval(()=>{advance();draw();},200);draw();});
   $('#workoutNext').addEventListener('click',()=>{if(active)advance();if(finished)return;skipped=true;if(index===phases.length-1)complete();else{index++;elapsed=0;animationTime=0;last=Date.now();}draw();});
@@ -115,7 +122,7 @@
   $('#workoutReset').addEventListener('click',()=>select(selectedId,true));
   $('#motionToggle').addEventListener('click',()=>{motion=!motion;draw();});
   $('#workoutClose').addEventListener('click',()=>dialog.close());
-  dialog.addEventListener('cancel',pause);dialog.addEventListener('close',()=>{pause();document.body.classList.remove('workout-modal-open');opener?.focus();});
+  dialog.addEventListener('cancel',pause);dialog.addEventListener('close',()=>{pause();document.body.classList.toggle('workout-modal-open',dialog.open||picker.open);if(picker.open)opener?.focus();else launch.focus();});
   dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&active)pause();});window.addEventListener('pagehide',pause);
   function animateFrame(){
