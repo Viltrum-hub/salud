@@ -139,5 +139,88 @@
     "imageAlt": "Hummus de garbanzos acompañado de bastones de zanahoria y pepino.",
     "servings": 2,
     "note": "Necesitas una licuadora o procesador; también puedes triturar con un tenedor."
+  },
+  {
+    "id": "licuado-banano",
+    "name": "Banano con avena",
+    "category": "bebida",
+    "time": "5 min",
+    "servings": 1,
+    "desc": "Un licuado cremoso con ingredientes cotidianos.",
+    "ingredients": [
+      "1 banano pequeño maduro",
+      "2 cucharadas de avena en hojuelas finas (10 g)",
+      "¾ de taza de leche o bebida vegetal sin azúcar (180 ml)"
+    ],
+    "steps": [
+      "Pela el banano y córtalo en rodajas. Mide la avena y la leche.",
+      "Coloca todo en la licuadora y procesa 45–60 segundos, hasta integrar la avena.",
+      "Sirve de inmediato. Si queda espeso, añade 1–2 cucharadas de agua y mezcla."
+    ],
+    "note": "Sin azúcar añadida. Usa banano maduro para dar dulzor.",
+    "image": "assets/recetas/licuado-banano.webp",
+    "imageAlt": "Licuado de banano y avena en un vaso, junto a banano y hojuelas de avena."
+  },
+  {
+    "id": "licuado-fresa",
+    "name": "Fresa con yogur",
+    "category": "bebida",
+    "time": "5 min",
+    "servings": 1,
+    "desc": "Fresas y yogur natural en una preparación fresca.",
+    "ingredients": [
+      "1 taza de fresas (150 g)",
+      "½ taza de yogur natural sin azúcar (120 g)",
+      "¼ de taza de agua potable (60 ml)"
+    ],
+    "steps": [
+      "Lava las fresas, retira las hojas y córtalas por la mitad.",
+      "Licúa las fresas con el yogur y el agua durante 30–45 segundos.",
+      "Sirve de inmediato. Ajusta la textura con 1 cucharada de agua si lo necesitas."
+    ],
+    "note": "Sin azúcar añadida. Puedes usar una alternativa vegetal al yogur.",
+    "image": "assets/recetas/licuado-fresa.webp",
+    "imageAlt": "Licuado rosado de fresas con yogur natural, acompañado de fresas frescas."
+  },
+  {
+    "id": "licuado-papaya",
+    "name": "Papaya con leche",
+    "category": "bebida",
+    "time": "5 min",
+    "servings": 1,
+    "desc": "Una bebida suave con papaya madura y leche.",
+    "ingredients": [
+      "1 taza de papaya madura en cubos (140 g)",
+      "¾ de taza de leche o bebida vegetal sin azúcar (180 ml)"
+    ],
+    "steps": [
+      "Lava la papaya antes de cortarla. Retira la cáscara y las semillas; mide una taza.",
+      "Licúa los cubos con la leche durante 30–45 segundos, hasta obtener una mezcla uniforme.",
+      "Sirve de inmediato. Si queda espeso, añade 1–2 cucharadas de agua y mezcla."
+    ],
+    "note": "Sin azúcar añadida. La papaya madura aporta el dulzor.",
+    "image": "assets/recetas/licuado-papaya.webp",
+    "imageAlt": "Licuado anaranjado de papaya con leche, junto a cubos de papaya."
+  },
+  {
+    "id": "licuado-pina",
+    "name": "Piña con pepino",
+    "category": "bebida",
+    "time": "5 min",
+    "servings": 1,
+    "desc": "Piña, pepino y agua para una bebida refrescante.",
+    "ingredients": [
+      "1 taza de piña pelada en cubos (165 g)",
+      "¼ de pepino mediano",
+      "¾ de taza de agua potable fría (180 ml)"
+    ],
+    "steps": [
+      "Lava el pepino y córtalo en rodajas. Mide la piña ya pelada y sin el centro duro.",
+      "Licúa la piña, el pepino y el agua durante 45–60 segundos.",
+      "Sirve sin colar para conservar la pulpa. Mezcla con una cuchara antes de beber."
+    ],
+    "note": "Sin azúcar añadida. Ajusta el agua a la textura que prefieras.",
+    "image": "assets/recetas/licuado-pina.webp",
+    "imageAlt": "Licuado de piña y pepino en un vaso, acompañado de piña y rodajas de pepino."
   }
 ]
