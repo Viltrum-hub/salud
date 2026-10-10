@@ -1,0 +1,117 @@
+[
+  {
+    "id": "bowl",
+    "name": "Bowl de garbanzos",
+    "category": "almuerzo",
+    "time": "15 min",
+    "ingredients": [
+      "Garbanzos cocidos",
+      "Arroz integral cocido",
+      "Tomate",
+      "Aguacate",
+      "Hojas verdes",
+      "Limón y aceite de oliva"
+    ],
+    "steps": [
+      "Lava los vegetales y corta el tomate y el aguacate.",
+      "Combina el arroz, los garbanzos y las hojas verdes en un bowl.",
+      "Añade tomate, aguacate y un toque de limón y aceite."
+    ],
+    "desc": "Una idea flexible con legumbres, cereales y vegetales."
+  },
+  {
+    "id": "avena",
+    "name": "Avena con fruta",
+    "category": "desayuno",
+    "time": "10 min",
+    "ingredients": [
+      "Avena",
+      "Leche o bebida vegetal",
+      "Banano",
+      "Fruta de temporada",
+      "Canela"
+    ],
+    "steps": [
+      "Cocina la avena con el líquido hasta obtener una textura cómoda.",
+      "Añade banano y fruta lavada y cortada.",
+      "Termina con canela al gusto."
+    ],
+    "desc": "Un desayuno sencillo que puedes adaptar a tu gusto."
+  },
+  {
+    "id": "tostada",
+    "name": "Tostada de aguacate",
+    "category": "desayuno",
+    "time": "10 min",
+    "ingredients": [
+      "Pan integral",
+      "Aguacate",
+      "Tomate",
+      "Huevo bien cocido",
+      "Limón"
+    ],
+    "steps": [
+      "Tuesta el pan y coloca el aguacate triturado.",
+      "Añade tomate lavado y cortado, y el huevo bien cocido.",
+      "Termina con unas gotas de limón."
+    ],
+    "desc": "Ingredientes cotidianos en una preparación rápida."
+  },
+  {
+    "id": "ensalada",
+    "name": "Ensalada de frijoles",
+    "category": "almuerzo",
+    "time": "15 min",
+    "ingredients": [
+      "Frijoles cocidos",
+      "Tomate",
+      "Pepino",
+      "Maíz cocido",
+      "Cilantro",
+      "Limón"
+    ],
+    "steps": [
+      "Lava y corta los vegetales.",
+      "Mezcla con los frijoles y el maíz.",
+      "Añade cilantro y limón al gusto."
+    ],
+    "desc": "Una combinación fresca con ingredientes accesibles."
+  },
+  {
+    "id": "fruta",
+    "name": "Fruta con yogur",
+    "category": "merienda",
+    "time": "5 min",
+    "ingredients": [
+      "Yogur natural o alternativa vegetal",
+      "Fruta de temporada",
+      "Avena"
+    ],
+    "steps": [
+      "Lava y corta la fruta.",
+      "Colócala sobre el yogur.",
+      "Añade avena y sirve."
+    ],
+    "desc": "Una merienda simple para variar durante la semana."
+  },
+  {
+    "id": "hummus",
+    "name": "Garbanzos para compartir",
+    "category": "merienda",
+    "time": "10 min",
+    "ingredients": [
+      "Garbanzos cocidos",
+      "Limón",
+      "Aceite de oliva",
+      "Agua",
+      "Zanahoria",
+      "Pepino"
+    ],
+    "steps": [
+      "Tritura los garbanzos con limón, un poco de aceite y agua.",
+      "Ajusta la textura a tu gusto.",
+      "Sirve con vegetales lavados y cortados."
+    ],
+    "desc": "Una idea para acompañar con vegetales frescos."
+  }
+]
