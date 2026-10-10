@@ -143,25 +143,22 @@
     if(id==='rest'){s1=add(s1,0,breathe);s2=add(s2,0,breathe);head=add(head,0,breathe);phrase=finished?'Buen trabajo':'Recupera el ritmo';}
     const n=v=>Math.round(v*100)/100,coords=p=>p.map(n).join(' ');
     const line=(a,b,color,width)=>`<path d="M${coords(a)}L${coords(b)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`;
-    const arm=(a,b,sign,far)=>{
-      const j=joint(a,b,40,40,sign),tone=far?'#819091':'url(#limbPearl)';
-      return line(a,j,tone,15)+line(j,b,tone,12)+`<ellipse cx="${n(b[0])}" cy="${n(b[1])}" rx="5.5" ry="6.5" fill="${far?'#879597':'#dce5e3'}"/>`+line(mix(a,j,.08),mix(a,j,.55),far?'#566562':'#edf2e6',1.3);
+    const silhouette='#f4f6ee',depth='#a8b9ad';
+    const limb=(a,b,l1,l2,sign,color,width)=>{
+      const j=joint(a,b,l1,l2,sign);
+      return `<path d="M${coords(a)}L${coords(j)}L${coords(b)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"/>`;
     };
-    const leg=(a,b,sign,far)=>{
-      const j=joint(a,b,51,49,sign),tone=far?'#66844a':'url(#legGraphite)';
-      return line(a,j,tone,23)+line(j,b,tone,16)+line(mix(a,j,.1),mix(a,j,.38),far?'#89a765':'#def4ab',2.5)+line(mix(j,b,.15),mix(j,b,.8),far?'#779755':'#bad98b',1.3);
-    };
+    const arm=(a,b,sign,far)=>limb(a,b,40,40,sign,far?depth:silhouette,15);
+    const leg=(a,b,sign,far)=>limb(a,b,51,49,sign,far?depth:silhouette,22);
     const sm=center(s1,s2),hm=center(h1,h2),dx=hm[0]-sm[0],dy=hm[1]-sm[1],len=Math.hypot(dx,dy)||1,normal=[dy/len,-dx/len];
     const edge=(v,w)=>add(v,normal[0]*w,normal[1]*w),width=profile?15:23,waist=profile?13:17,sl=edge(sm,width),sr=edge(sm,-width),hl=edge(hm,waist),hr=edge(hm,-waist),ml=edge(mix(sm,hm,.5),width*.8),mr=edge(mix(sm,hm,.5),-width*.8);
-    const torso=`<path d="M${coords(sl)}Q${coords(edge(sm,0))} ${coords(sr)}Q${coords(mr)} ${coords(hr)}Q${coords(hm)} ${coords(hl)}Q${coords(ml)} ${coords(sl)}Z" fill="url(#bodyGradient)"/><path d="M${coords(mix(sl,hl,.15))}Q${coords(ml)} ${coords(mix(sl,hl,.83))}" fill="none" stroke="#ecffb0" stroke-opacity=".35" stroke-width="3"/>`;
-    const neck=add(sm,(head[0]-sm[0])*.38,(head[1]-sm[1])*.38);
-    const face=`<path d="M${n(head[0]+(profile?6:-8))} ${n(head[1]-14)}q-5 12-1 26" fill="none" stroke="#f8fff9" stroke-opacity=".32" stroke-width="2"/>`;
-    const shoe=v=>{const toe=[v[0]+17,id==='heel'?280:v[1]+3],heel=add(v,-8,1);return `<path d="M${coords(heel)}Q${coords(add(v,3,-6))} ${coords(toe)}L${coords(add(toe,0,4))}L${coords(add(heel,0,4))}Z" fill="#eef2e7"/>`+line(add(heel,0,4),add(toe,0,4),'#87988d',2);};
+    const torso=`<path d="M${coords(sl)}Q${coords(add(sm,normal[1]*9,-normal[0]*9))} ${coords(sr)}Q${coords(mr)} ${coords(hr)}Q${coords(hm)} ${coords(hl)}Q${coords(ml)} ${coords(sl)}Z" fill="${silhouette}"/>`;
+    const shoe=(v,far)=>line(add(v,-5,2),[v[0]+13,id==='heel'?282:v[1]+2],far?depth:silhouette,9);
     const markers={squat:[300,166,300,214],heel:[249,248,249,218],row:[283,219,257,182],wall:[232,75,253,75],bridge:[193,220,193,185],press:[139,208,139,175],shoulders:[290,168,290,118],march:[112,235,112,204],side:[92,246,64,246],jack:[285,192,285,151]};
     const m=markers[id];const arrow=m?(rising||['march','side','jack'].includes(id)?m:[m[2],m[3],m[0],m[1]]):null;
     const guide=arrow?`<path d="M${arrow[0]} ${arrow[1]}L${arrow[2]} ${arrow[3]}" fill="none" stroke="#c1ff34" stroke-opacity=".7" stroke-width="1.5" marker-end="url(#motionArrow)"/>`:'';
-    $('#figureLimbs').innerHTML=scene+guide+leg(h2,foot2,legSigns[1],true)+arm(s2,hand2,armSigns[1],true)+line(sm,neck,'#becbc7',12)+torso+leg(h1,foot1,legSigns[0],false)+arm(s1,hand1,armSigns[0],false)+`<g${floor?` transform="rotate(-90 ${n(head[0])} ${n(head[1])})"`:""}><ellipse cx="${n(head[0])}" cy="${n(head[1])}" rx="${profile?15:17}" ry="21" fill="url(#limbPearl)"/>`+face+'</g>'+shoe(foot2)+shoe(foot1);
-    $('#figureWeights').innerHTML=p.weights&&id!=='rest'?[hand2,hand1].map(([x,y])=>`<g transform="translate(${n(x)} ${n(y)})"><rect x="-14" y="-3" width="28" height="6" rx="2" fill="#abb5b6"/><rect x="-20" y="-10" width="10" height="20" rx="3" fill="#313e42" stroke="#98a9ad"/><rect x="10" y="-10" width="10" height="20" rx="3" fill="#313e42" stroke="#98a9ad"/></g>`).join(''):'';
+    $('#figureLimbs').innerHTML=scene+guide+leg(h2,foot2,legSigns[1],true)+arm(s2,hand2,armSigns[1],true)+torso+leg(h1,foot1,legSigns[0],false)+arm(s1,hand1,armSigns[0],false)+`<circle cx="${n(head[0])}" cy="${n(head[1])}" r="19" fill="${silhouette}"/>`+shoe(foot2,true)+shoe(foot1,false);
+    $('#figureWeights').innerHTML=p.weights&&id!=='rest'?[hand2,hand1].map(([x,y])=>`<g transform="translate(${n(x)} ${n(y)})"><rect x="-14" y="-3" width="28" height="6" rx="2" fill="#c1ff34"/><rect x="-20" y="-10" width="10" height="20" rx="3" fill="#c1ff34"/><rect x="10" y="-10" width="10" height="20" rx="3" fill="#c1ff34"/></g>`).join(''):'';
     $('#movementLabel').textContent=`${e?.view||'Recuperación'} · ${phrase}`;
     if(lastFigureId!==id){if(motion)$('#exerciseFigure').animate?.([{opacity:.35},{opacity:1}],{duration:280,easing:'ease-out'});lastFigureId=id;}
 
