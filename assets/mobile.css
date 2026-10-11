@@ -1,0 +1,83 @@
+@media(max-width:1050px){
+.header-inner{height:72px;gap:18px}
+.logo{font-size:35px;flex:none}
+.main-nav{display:none;position:absolute;top:72px;left:0;right:0;margin:0;padding:16px 28px;background:var(--paper);border-bottom:1px solid var(--line);grid-template-columns:1fr 1fr;gap:4px 24px;max-height:calc(100dvh - 72px);overflow-y:auto}
+.main-nav.open{display:grid}
+.main-nav a{font-size:13px;min-height:44px;display:flex;align-items:center;justify-self:stretch}
+.menu-toggle{display:block;margin-left:auto;flex:none;width:44px;height:44px}
+.header-action{flex:none}
+}
+@media(max-width:700px){
+html{scroll-padding-top:84px}
+.wrap{width:calc(100% - 32px)}
+.header-inner{gap:8px}
+.header-inner .logo{font-size:32px}
+.header-inner .theme-toggle{width:72px;height:44px}
+.header-inner .menu-toggle{width:44px;height:44px}
+.header-inner .header-action{min-height:44px;padding:10px;font-size:9px;gap:5px;letter-spacing:0}
+.main-nav{padding:12px 16px}
+.page-hero{grid-template-columns:minmax(0,1fr)}
+.page-hero .page-copy{padding:34px 16px}
+.page-hero h1,.hero-copy h1{font-size:clamp(54px,14vw,88px);overflow-wrap:break-word}
+.page-hero img{height:260px;max-height:260px}
+.hero-copy{width:100%;min-width:0}
+.section h2,.daily h2,.manifesto h2,.tool-copy h2,.big-cta h2,.pillar-intro h2{font-size:clamp(38px,10.5vw,62px);overflow-wrap:break-word}
+.page-title h1,.space-intro h1{font-size:clamp(54px,14vw,82px)}
+.section-top,.space-section-head{gap:20px}
+.daily,.manifesto,.tool-layout{grid-template-columns:minmax(0,1fr);gap:30px}
+.recipe-grid,.guides,.resource-grid{grid-template-columns:minmax(0,1fr)}
+.intro-strip{grid-template-columns:minmax(0,1fr)}
+.intro-strip>div{grid-template-columns:100px minmax(0,1fr)}
+.tool-box,.recipe-body{padding:22px}
+.button-row{gap:10px}
+.button-row .button{flex:1 1 160px;min-width:0;justify-content:center}
+.button,.text-link,.chip{min-height:44px}
+input,select,textarea,.space-history-filters select,.rest-dialog .clock-picker select{font-size:16px}
+input,select,textarea{min-width:0}
+.checklist label{align-items:flex-start;overflow-wrap:anywhere}
+.checklist input{margin-top:3px}
+dialog.dialog,dialog.workout-dialog,dialog.mind-dialog,dialog.rest-dialog,dialog.training-picker{width:calc(100% - 16px);max-width:calc(100% - 16px);max-height:calc(100dvh - 24px);margin:auto;padding:0;overscroll-behavior:contain}
+.dialog-content,.mind-pane,.rest-pane,.training-picker-content{padding:22px 18px}
+.dialog h2,#recipeTitle{font-size:clamp(32px,9vw,48px);overflow-wrap:break-word}
+.dialog-close,.workout-close{width:44px;height:44px;flex:none}
+.workout-dialog-header{padding:16px;gap:12px;flex-wrap:wrap}
+.workout-dialog-header>div{min-width:0;flex:1 1 130px}
+.workout-dialog-header h2,.mind-dialog .workout-dialog-header h2,.rest-dialog .workout-dialog-header h2{font-size:26px;overflow-wrap:break-word}
+.workout-back,#mindBack,#restBack{min-height:44px;margin-left:0}
+.recipe-detail-image{height:190px}
+.recipe-facts{flex-wrap:wrap;gap:22px}
+.mind-dialog .breath-orb{width:150px;height:150px;margin:45px auto}
+.mind-dialog .breath-box{padding:20px 12px}
+.training-picker .workout-card-bottom{flex-wrap:wrap;gap:14px}
+.training-picker .workout-card .text-link{justify-content:center}
+.workout-dialog .training-studio{grid-template-columns:minmax(0,1fr)}
+.workout-dialog .training-visual{position:relative;padding:14px;min-height:0}
+.workout-dialog .training-visual svg{height:clamp(180px,30dvh,245px);max-width:100%}
+.workout-dialog .training-console{padding:20px 18px}
+.space-main .habit-head a{width:44px;height:44px;flex:none}
+.space-main .week-strip{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.space-main .week-day{min-width:0;min-height:64px}
+.space-stats strong{font-size:clamp(24px,7vw,32px)}
+.space-history-filters>div{min-width:0;flex:1 1 140px}
+.space-main .history-list li{overflow-wrap:anywhere}
+.footer-links a{min-height:44px;display:flex;align-items:center}
+.footer-bottom{overflow-wrap:anywhere}
+}
+@media(max-width:360px){
+.header-inner{gap:5px}
+.header-inner .logo{font-size:28px}
+.header-inner .theme-toggle{width:64px}
+.header-inner .header-action{padding:10px 7px;font-size:8px}
+.header-action .arrow{display:none}
+.pillars{grid-template-columns:minmax(0,1fr)}
+.pillar-card img{height:230px}
+.fields-two{grid-template-columns:minmax(0,1fr)}
+.rest-schedule,.rest-ritual-panel{padding:18px}
+.rest-schedule-times{gap:5px}
+.rest-schedule-times strong{font-size:30px}
+.space-stats>article{padding:18px 12px}
+}
+@media(max-height:500px) and (orientation:landscape){
+dialog.dialog,dialog.workout-dialog,dialog.mind-dialog,dialog.rest-dialog,dialog.training-picker{max-height:calc(100dvh - 16px)}
+.workout-dialog .training-visual svg{height:180px}
+}
