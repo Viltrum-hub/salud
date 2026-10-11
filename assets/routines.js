@@ -91,7 +91,7 @@
     const pose=window.VitalMotion.pose(id,motion?animationTime:(e?.tempo||4)*.18,!!current.weights);
     const n=v=>Math.round(v*100)/100,coords=p=>p.map(n).join(' '),center=(a,b)=>a.map((v,i)=>(v+b[i])/2),add=(p,x,y)=>[p[0]+x,p[1]+y];
     const line=(pts,color,width,classes='')=>`<path class="${classes}" d="M${pts.map(coords).join('L')}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"/>`;
-    const pale='#f4f6ee',depth='#a8b9ad';
+    const light=document.documentElement.dataset.theme==='light',pale=light?'#28352a':'#f4f6ee',depth=light?'#778973':'#a8b9ad',guideColor=light?'#56791a':'#c1ff34';
     const arm=(i)=>line(pose.arms[i],i?depth:pale,15,`motion-arm ${i?'far':'near'}${id==='row'?' row-arm':''}`);
     const leg=(i)=>line(pose.legs[i],i?depth:pale,22,`motion-leg ${i?'far':'near'}`);
     const sm=center(...pose.shoulders),hm=center(...pose.hips),dx=hm[0]-sm[0],dy=hm[1]-sm[1],len=Math.hypot(dx,dy),normal=[dy/len,-dx/len],edge=(p,w)=>add(p,normal[0]*w,normal[1]*w),width=pose.profile?15:23,waist=pose.profile?13:17;
@@ -101,7 +101,7 @@
     const scene=pose.surface==='wall'?'<path d="M274 74V292" stroke="#6e7f75" stroke-width="7"/>':pose.surface==='mat'?'<rect x="45" y="287" width="267" height="6" rx="3" fill="#41553e"/>':'';
     const markers={squat:[300,166,300,214],heel:[249,248,249,218],row:[271,211,238,190],wall:[232,75,253,75],bridge:[193,220,193,185],press:[170,238,170,190],shoulders:[290,168,290,118],march:[112,235,112,204],side:[92,246,64,246],jack:[285,192,285,151],hinge:[280,149,280,202],curl:[270,184,270,138],overhead:[284,90,284,39],lateral:[284,177,300,127]};
     const m=markers[id],arrow=m?(pose.up||['march','side','jack'].includes(id)?m:[m[2],m[3],m[0],m[1]]):null;
-    const guide=arrow?`<path d="M${arrow[0]} ${arrow[1]}L${arrow[2]} ${arrow[3]}" fill="none" stroke="#c1ff34" stroke-opacity=".7" stroke-width="1.5" marker-end="url(#motionArrow)"/>`:'';
+    const guide=arrow?`<path d="M${arrow[0]} ${arrow[1]}L${arrow[2]} ${arrow[3]}" fill="none" stroke="${guideColor}" stroke-opacity=".7" stroke-width="1.5" marker-end="url(#motionArrow)"/>`:'';
     $('#figureLimbs').innerHTML=scene+guide+leg(1)+arm(1)+torso+leg(0)+arm(0)+`<circle cx="${n(pose.head[0])}" cy="${n(pose.head[1])}" r="19" fill="${pale}"/>`+shoe(1)+shoe(0);
     $('#figureWeights').innerHTML=pose.weights?[pose.arms[1][2],pose.arms[0][2]].map(([x,y])=>`<g transform="translate(${n(x)} ${n(y)})"><rect x="-14" y="-3" width="28" height="6" rx="2" fill="#c1ff34"/><rect x="-20" y="-10" width="10" height="20" rx="3" fill="#c1ff34"/><rect x="10" y="-10" width="10" height="20" rx="3" fill="#c1ff34"/></g>`).join(''):'';
     $('#movementLabel').textContent=`${e?.view||'Recuperación'} · ${pose.phrase}`;
@@ -133,5 +133,6 @@
     }
     window.requestAnimationFrame(animateFrame);
   }
+  document.addEventListener('vital-theme-change',()=>{if(routine)figure();});
   window.requestAnimationFrame(animateFrame);
 })();
