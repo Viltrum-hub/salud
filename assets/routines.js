@@ -91,7 +91,7 @@
     const pose=window.VitalMotion.pose(id,motion?animationTime:(e?.tempo||4)*.18,!!current.weights);
     const n=v=>Math.round(v*100)/100,coords=p=>p.map(n).join(' '),center=(a,b)=>a.map((v,i)=>(v+b[i])/2),add=(p,x,y)=>[p[0]+x,p[1]+y];
     const line=(pts,color,width,classes='')=>`<path class="${classes}" d="M${pts.map(coords).join('L')}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"/>`;
-    const light=document.documentElement.dataset.theme==='light',pale=light?'#28352a':'#f4f6ee',depth=light?'#778973':'#a8b9ad',guideColor=light?'#56791a':'#c1ff34';
+    const pale='#f4f6ee',depth='#a8b9ad',guideColor='#c1ff34';
     const arm=(i)=>line(pose.arms[i],i?depth:pale,15,`motion-arm ${i?'far':'near'}${id==='row'?' row-arm':''}`);
     const leg=(i)=>line(pose.legs[i],i?depth:pale,22,`motion-leg ${i?'far':'near'}`);
     const sm=center(...pose.shoulders),hm=center(...pose.hips),dx=hm[0]-sm[0],dy=hm[1]-sm[1],len=Math.hypot(dx,dy),normal=[dy/len,-dx/len],edge=(p,w)=>add(p,normal[0]*w,normal[1]*w),width=pose.profile?15:23,waist=pose.profile?13:17;
