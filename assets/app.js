@@ -269,48 +269,49 @@
   }
   if ($('#todayCount')) {
     const labels = { mente: 'Mente', movimiento: 'Movimiento', alimentacion: 'Alimentación', descanso: 'Descanso' };
+    let selectedDay=today(), historyLimit=10;
+    const clockText=value=>{const [h,m]=value.split(':').map(Number);return `${String(h%12||12).padStart(2,'0')}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`;};
+    function journal(){try{const data=JSON.parse(localStorage.getItem('vital-mind-journal-v1')||'[]');return Array.isArray(data)?data.filter(e=>e&&typeof e.text==='string'&&typeof e.date==='string').slice(-30):[];}catch{return [];}}
     function renderSpace() {
       const current = day(), sessions = state.sessions.filter(session => session.date === today());
       $('#todayDate').textContent = new Date().toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'long' });
       const count = Object.keys(labels).filter(key => !!current.habits[key]).length;
-      $('#todayCount').textContent = `${count}/4`;
+      $('#todayCount').textContent = `${count}/4`;$('#spaceRing').style.setProperty('--progress',`${count*25}%`);$('#spaceRing').setAttribute('aria-valuenow',String(count));
+      const next=Object.keys(labels).find(key=>!current.habits[key]);const actions={mente:'Dedícate un momento',movimiento:'Elige un entrenamiento',alimentacion:'Encuentra una receta',descanso:'Prepara tu descanso'};
+      $('#spaceEncouragement').textContent=count===4?'Hoy marcaste tus cuatro hábitos. Continúa a tu propio ritmo.':count?`${count} ${count===1?'acción marcada':'acciones marcadas'}. Puedes elegir tu siguiente paso.`:'Empieza con una acción pequeña, cuando estés listo.';
+      $('#spaceNext').textContent=next?actions[next]+' ↗':'Explorar VITAL ↗';$('#spaceNext').href=next?next+'.html':'index.html';
       $('#breathCount').textContent = String(sessions.filter(session => session.type === 'breath').length);
       const activityMinutes = sessions.filter(session => session.type === 'activity').reduce((sum, session) => sum + (Number(session.minutes) || 0), 0);
-      $('#activityCount').textContent = String(activityMinutes);
+      $('#activityCount').textContent = String(Math.round(activityMinutes*10)/10);
       $('#sleepStat').textContent = state.sleep ? durationText(sleepMinutes(state.sleep.bed, state.sleep.wake)) : '—';
-      $('#detail-mente').textContent = current.mood ? `Tu registro de hoy: ${current.mood}.` : 'Puedes registrar tu estado de ánimo en Mente.';
-      $('#detail-movimiento').textContent = activityMinutes ? `Hoy terminaste ${activityMinutes} minutos de actividad.` : 'Prueba el temporizador en Movimiento.';
+      $('#detail-mente').textContent = current.mood ? `Tu registro de hoy: ${current.mood}.` : 'Registra cómo te sientes o dedica un momento a respirar.';
+      $('#detail-movimiento').textContent = activityMinutes ? `Hoy registraste ${Math.round(activityMinutes*10)/10} minutos de actividad.` : 'Explora las rutinas guiadas de Movimiento.';
       $('#detail-alimentacion').textContent = state.shopping.length ? `${state.shopping.length} ingredientes en tu lista de compras.` : 'Encuentra ideas y crea tu lista de compras.';
-      $('#detail-descanso').textContent = state.sleep ? `Tu horario: ${state.sleep.bed}–${state.sleep.wake}.` : 'Organiza tu horario en Descanso.';
-      $$('[data-habit]').forEach(input => { input.checked = !!current.habits[input.dataset.habit]; });
-      const strip = $('#weekStrip'); strip.replaceChildren();
+      $('#detail-descanso').textContent = state.sleep ? `Tu horario: ${clockText(state.sleep.bed)} → ${clockText(state.sleep.wake)}.` : 'Organiza tu horario en Descanso.';
+      $$('[data-habit]').forEach(input => { input.checked = !!current.habits[input.dataset.habit];input.closest('.habit').classList.toggle('habit-done',input.checked); });
+      const strip = $('#weekStrip'); strip.replaceChildren();let weekCount=0;
       for (let i = 6; i >= 0; i--) {
         const date = new Date(); date.setHours(12, 0, 0, 0); date.setDate(date.getDate() - i);
-        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        const habits = state.days[key]?.habits || {}, done = Object.keys(labels).filter(name => !!habits[name]).length;
-        const item = document.createElement('div'); item.className = `week-day${done ? ' active' : ''}`;
-        const caption = document.createElement('span'); caption.textContent = date.toLocaleDateString('es', { weekday: 'short' });
-        const value = document.createElement('b'); value.textContent = `${done}/4`;
-        const number = document.createElement('span'); number.textContent = date.getDate();
-        item.append(caption, value, number); strip.append(item);
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2,'0')}`;
+        const habits=state.days[key]?.habits||{},done=Object.keys(labels).filter(name=>!!habits[name]).length;if(done)weekCount++;
+        const item=document.createElement('button');item.type='button';item.className=`week-day${done?' active':''}`;item.dataset.day=key;item.setAttribute('aria-pressed',String(selectedDay===key));item.setAttribute('aria-label',date.toLocaleDateString('es',{day:'numeric',month:'long'})+`: ${done} de 4 hábitos`);
+        const caption=document.createElement('span');caption.textContent=date.toLocaleDateString('es',{weekday:'short'});const value=document.createElement('b');value.textContent=`${done}/4`;const number=document.createElement('span');number.textContent=date.getDate();item.append(caption,value,number);item.addEventListener('click',()=>{selectedDay=key;renderSpace();$('#weekStrip [data-day="'+key+'"]').focus();});strip.append(item);
       }
-      const list = $('#historyList'); list.replaceChildren();
-      state.sessions.slice(-7).reverse().forEach(session => {
-        const li = document.createElement('li'), name = document.createElement('span'), when = document.createElement('span');
-        name.textContent = `${session.label}${session.type === 'activity' ? ` · ${session.minutes} min` : ''}`;
-        const date = new Date(session.at);
-        when.textContent = Number.isFinite(date.getTime()) ? date.toLocaleDateString('es', { day: 'numeric', month: 'short' }) : session.date;
-        li.append(name, when); list.append(li);
-      });
-      $('#historyEmpty').hidden = !!state.sessions.length;
+      $('#spaceWeekCount').textContent=weekCount+'/7';const doneNames=Object.keys(labels).filter(key=>state.days[selectedDay]?.habits?.[key]).map(key=>labels[key]);$('#spaceSelectedDate').textContent=new Date(selectedDay+'T12:00:00').toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long'});$('#spaceDayHabits').textContent=doneNames.length?'Hábitos marcados: '+doneNames.join(' · ')+'.':'No hay hábitos marcados para este día.';
+      const notes=journal(),latest=notes.at(-1);$('#spaceJournalCount').textContent=notes.length?`${notes.length} ${notes.length===1?'reflexión guardada':'reflexiones guardadas'}.`:'Aún no has guardado reflexiones.';$('#spaceJournalPreview').textContent=latest?latest.text.slice(0,220)+(latest.text.length>220?'…':''):'Una frase puede ser un buen comienzo.';
+      const type=$('#spaceHistoryType').value,range=$('#spaceHistoryRange').value,cutoff=new Date();cutoff.setHours(0,0,0,0);if(range!=='all')cutoff.setDate(cutoff.getDate()-Number(range)+1);
+      const filtered=state.sessions.filter(session=>(type==='all'||session.type===type)&&(range==='all'||new Date(session.date+'T12:00:00')>=cutoff)).slice().reverse();const list=$('#historyList');list.replaceChildren();
+      filtered.slice(0,historyLimit).forEach(session=>{const li=document.createElement('li'),name=document.createElement('span'),when=document.createElement('time');const label=session.type==='sleep'&&state.sleep&&session.label?.startsWith('Horario ')?session.label.replace(/(\d{2}:\d{2})/g,clockText):session.label;name.textContent=`${label}${session.type==='activity'?` · ${session.minutes} min`:''}`;const date=new Date(session.at);when.textContent=Number.isFinite(date.getTime())?date.toLocaleString('es',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit',hour12:true}):session.date;li.append(name,when);list.append(li);});
+      $('#historyEmpty').hidden=!!filtered.length;$('#historyEmpty').textContent=state.sessions.length?'No hay registros para estos filtros.':'Todavía no hay registros. Empieza con una pausa, un entrenamiento o tu horario.';$('#spaceHistoryCount').textContent=`${filtered.length} ${filtered.length===1?'registro':'registros'} · mostrando ${Math.min(historyLimit,filtered.length)}`;$('#spaceHistoryMore').hidden=filtered.length<=historyLimit;
     }
+    ['#spaceHistoryType','#spaceHistoryRange'].forEach(id=>$(id).addEventListener('change',()=>{historyLimit=10;renderSpace();}));$('#spaceHistoryMore').addEventListener('click',()=>{historyLimit+=10;renderSpace();});
     $$('[data-habit]').forEach(input => input.addEventListener('change', () => { day().habits[input.dataset.habit] = input.checked; save(); renderSpace(); }));
-    $('#exportData').addEventListener('click', () => download(`VITAL-registros-${today()}.json`, JSON.stringify(state, null, 2), 'application/json'));
+    $('#exportData').addEventListener('click', () => download(`VITAL-registros-${today()}.json`, JSON.stringify({...state,journal:journal()}, null, 2), 'application/json'));
     const dialog = $('#deleteDialog');
     $('#openDelete').addEventListener('click', () => dialog.showModal());
     $$('[data-close-delete]').forEach(button => button.addEventListener('click', () => dialog.close()));
     $('#confirmDelete').addEventListener('click', () => {
-      try { localStorage.removeItem(KEY); } catch { toast('No se pudo acceder al almacenamiento del navegador.'); }
+      try { localStorage.removeItem(KEY); localStorage.removeItem('vital-mind-journal-v1'); } catch { toast('No se pudo acceder al almacenamiento del navegador.'); }
       state = empty(); dialog.close(); renderSpace();
       $('#spaceStatus').textContent = 'Los registros de VITAL se han eliminado de esta visita y del almacenamiento accesible.';
     });
